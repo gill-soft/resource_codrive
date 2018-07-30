@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.springframework.core.ParameterizedTypeReference;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gillsoft.model.Ctx;
 import com.gillsoft.model.Var;
@@ -12,6 +14,8 @@ import com.gillsoft.model.request.TripSearchRequest;
 public class TripPackage implements Serializable {
 
 	private static final long serialVersionUID = -1022724811422338355L;
+	
+	private static final ParameterizedTypeReference<TripPackage> typeRef = new ParameterizedTypeReference<TripPackage>() { };
 
 	private TripSearchRequest request;
 	
@@ -97,6 +101,10 @@ public class TripPackage implements Serializable {
 	@JsonProperty("vars")
 	public void setVars(List<Var> vars) {
 		this.vars = vars;
+	}
+
+	public static ParameterizedTypeReference<TripPackage> getTypeReference() {
+		return typeRef;
 	}
 
 }

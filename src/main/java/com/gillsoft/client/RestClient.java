@@ -154,10 +154,10 @@ public class RestClient {
 		try {
 			for (String lang : LANGS) {
 				Stations stations = getResult(template, null, String.format(DEPARTURE_STATIONS, lang), HttpMethod.GET,
-						new ParameterizedTypeReference<Stations>() { });
+						Stations.getTypeReference());
 				if (stations != null && stations.getStations() != null && !stations.getStations().isEmpty()) {
-					Stations arrStations = getResult(template, null, String.format(ARRIVE_STATIONS, lang), HttpMethod.GET,
-							new ParameterizedTypeReference<Stations>() { });
+					Stations arrStations = getResult(template, null, String.format(ARRIVE_STATIONS, lang),
+							HttpMethod.GET, Stations.getTypeReference());
 					boolean isArrivalEmpty = true;
 					if (arrStations != null && arrStations.getStations() != null && !arrStations.getStations().isEmpty()) {
 						stations.getStations().addAll(arrStations.getStations());
@@ -190,7 +190,8 @@ public class RestClient {
 	/****************** SEATS ********************/
 	public List<Seat> getSeats(String tripId) throws ResponseError {
 		List<Seat> seats = new ArrayList<>();
-		CarMap carMap = getResult(searchTemplate, null, String.format(CAR_MAP, tripId), HttpMethod.GET, new ParameterizedTypeReference<CarMap>() { });
+		CarMap carMap = getResult(searchTemplate, null, String.format(CAR_MAP, tripId), HttpMethod.GET,
+				CarMap.getTypeReference());
 		if (carMap.getFreePlaces() != null && !carMap.getFreePlaces().isEmpty()) {
 			carMap.getFreePlaces().stream().forEach(c -> {
 				seats.add(createSeat(c, SeatStatus.FREE));
@@ -233,7 +234,7 @@ public class RestClient {
 	}
 
 	public TripPackage getTrips(String key) throws ResponseError {
-		return getResult(searchTemplate, null, key, HttpMethod.GET, new ParameterizedTypeReference<TripPackage>() { });
+		return getResult(searchTemplate, null, key, HttpMethod.GET, TripPackage.getTypeReference());
 	}
 	
 	/****************** BILL/PAY/CANCEL ********************/

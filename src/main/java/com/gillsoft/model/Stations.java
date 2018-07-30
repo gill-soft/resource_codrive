@@ -3,6 +3,8 @@ package com.gillsoft.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.core.ParameterizedTypeReference;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Stations implements Serializable {
 
 	private static final long serialVersionUID = -7928100307549422684L;
+	
+	private static final ParameterizedTypeReference<Stations> typeRef = new ParameterizedTypeReference<Stations>() { };
 
 	@JsonProperty("stations")
 	private List<Point> stations;
@@ -22,6 +26,10 @@ public class Stations implements Serializable {
 	@JsonProperty("stations")
 	public void setstations(List<Point> stations) {
 		this.stations = stations;
+	}
+
+	public static ParameterizedTypeReference<Stations> getTypeReference() {
+		return typeRef;
 	}
 
 }

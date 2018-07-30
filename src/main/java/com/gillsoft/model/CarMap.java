@@ -1,10 +1,17 @@
 package com.gillsoft.model;
 
+import java.io.Serializable;
 import java.util.List;
+
+import org.springframework.core.ParameterizedTypeReference;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CarMap {
+public class CarMap implements Serializable {
+
+	private static final long serialVersionUID = -5401632619559302011L;
+
+	private static final ParameterizedTypeReference<CarMap> typeRef = new ParameterizedTypeReference<CarMap>() { };
 
 	@JsonProperty("free_places")
 	private List<String> freePlaces;
@@ -30,5 +37,9 @@ public class CarMap {
 	@JsonProperty("busy_places")
 	public void setBusyPlaces(List<String> busyPlaces) {
 		this.busyPlaces = busyPlaces;
+	}
+
+	public static ParameterizedTypeReference<CarMap> getTypeReference() {
+		return typeRef;
 	}
 }
