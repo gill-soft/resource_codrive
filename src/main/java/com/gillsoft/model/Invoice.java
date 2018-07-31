@@ -215,7 +215,7 @@ public class Invoice {
 				&& soldSeats.get(0).getPrice().getArticles() != null) {
 			Tariff priceTariff = null;
 			for (InvoiceArticle tariff : soldSeats.get(0).getPrice().getArticles()) {
-				if (tariff.getCode().equals("1002")) {
+				if ("1001".equals(tariff.getCode()) || "1002".equals(tariff.getCode())) {
 					priceTariff = new Tariff();
 					priceTariff.setValue(priceToBigDecimal(tariff.getPrice()));
 					priceTariff.setCode(tariff.getCode());
