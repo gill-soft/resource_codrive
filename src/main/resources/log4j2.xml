@@ -2,7 +2,7 @@
 <Configuration monitorInterval="10" strict="true">
 	<Properties>
 		<Property name="baseDir" value="D:/logs" />
-		<Property name="filename" value="${baseDir}/dopas.log" />
+		<Property name="filename" value="${baseDir}/codrive.log" />
 	</Properties>
 	<Appenders>
 		<Console name="STDOUT" target="SYSTEM_OUT">

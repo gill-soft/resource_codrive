@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gillsoft.LocalityServiceController;
 import com.gillsoft.util.Date;
@@ -43,9 +44,6 @@ public class Invoice {
 	
 	@JsonProperty("sold_seats")
 	private List<SoldSeat> soldSeats = new ArrayList<>();
-	
-	/*@JsonProperty("price")
-	private Price price;*/
 	
 	@JsonProperty("counterparts")
 	private Counterparts counterparts;
@@ -141,14 +139,6 @@ public class Invoice {
 		this.soldSeats = soldSeats;
 	}
 
-	/*public Price getPrice() {
-		return price;
-	}
-
-	public void setPrice(Price price) {
-		this.price = price;
-	}*/
-
 	public Counterparts getCounterparts() {
 		return counterparts;
 	}
@@ -165,6 +155,7 @@ public class Invoice {
 		this.error = error;
 	}
 	
+	@JsonIgnore
 	public Segment getSegment() {
 		Segment segment = new Segment();
 		segment.setId(travel.getGuididx());
@@ -185,6 +176,7 @@ public class Invoice {
 		return segment;
 	}
 	
+	@JsonIgnore
 	public Seat getSeat() {
 		if (soldSeats != null && !soldSeats.isEmpty()) {
 			Seat seat = new Seat();
@@ -196,6 +188,7 @@ public class Invoice {
 		}
 	}
 	
+	@JsonIgnore
 	public Price getPrice() {
 		if (soldSeats != null && !soldSeats.isEmpty()) {
 			Price price = new Price();
@@ -210,6 +203,7 @@ public class Invoice {
 		}
 	}
 	
+	@JsonIgnore
 	private void createTariffAndCommissions(Price price) {
 		if (soldSeats != null && !soldSeats.isEmpty() && soldSeats.get(0).getPrice() != null
 				&& soldSeats.get(0).getPrice().getArticles() != null) {
@@ -254,6 +248,7 @@ public class Invoice {
 		}
 	}
 	
+	@JsonIgnore
 	private BigDecimal priceToBigDecimal(long price) {
 		return new BigDecimal(price).divide(new BigDecimal(100));
 	}
