@@ -234,7 +234,11 @@ public class RestClient {
 	}
 
 	public TripPackage getTrips(String key) throws ResponseError {
-		return getResult(searchTemplate, null, key, HttpMethod.GET, TripPackage.getTypeReference());
+		TripPackage tripPackage = getResult(searchTemplate, null, key, HttpMethod.GET, TripPackage.getTypeReference());
+		if (tripPackage != null && tripPackage.getError() != null) {
+			throw new ResponseError(tripPackage.getError().getMessage());
+		}
+		return tripPackage;
 	}
 	
 	/****************** BILL/PAY/CANCEL ********************/
