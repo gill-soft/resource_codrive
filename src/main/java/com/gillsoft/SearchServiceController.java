@@ -2,6 +2,7 @@ package com.gillsoft;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +68,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 
 	@Override
 	public List<RequiredField> getRequiredFieldsResponse(String arg0) {
-		throw RestClient.createUnavailableMethod();
+		return Arrays.asList(RequiredField.NAME, RequiredField.SURNAME, RequiredField.PHONE, RequiredField.EMAIL);
 	}
 
 	@Override
