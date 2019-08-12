@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration monitorInterval="10" strict="true">
+<Configuration strict="true">
 	<Properties>
 		<Property name="baseDir" value="/opt/tomcat/logs" />
-		<Property name="filename" value="${baseDir}/codrive.log" />
+        <Property name="baseFileName" value="codrive" />
+		<Property name="fileName" value="${baseDir}/${baseFileName}.log" />
 	</Properties>
 	<Appenders>
 		<Console name="STDOUT" target="SYSTEM_OUT">
 			<PatternLayout
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n" />
 		</Console>
-		<RollingFile name="RollingFile" fileName="${filename}"
-			filePattern="${baseDir}/$${date:yyyy-MM}/%d{yyyy-MM-dd-HH_mm_ss}.log.zip">
+		<RollingFile name="RollingFile" fileName="${fileName}"
+			filePattern="${baseDir}/$${date:yyyy-MM}/%d{yyyy-MM-dd-HH_mm_ss}.${baseFileName}.log.zip">
 			<PatternLayout charset="UTF-8"
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n" />
 			<Policies>
@@ -26,7 +27,7 @@
 	<Loggers>
 		<Logger name="org.springframework" level="error" />
 		<Root level="INFO">
-			<AppenderRef ref="STDOUT" />
+			<AppenderRef ref="STDOUT" level="ERROR" />
 			<AppenderRef ref="RollingFile" />
 		</Root>
 	</Loggers>

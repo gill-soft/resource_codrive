@@ -1,10 +1,11 @@
-package com.gillsoft.model;
+package com.gillsoft.client.model;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.gillsoft.client.model.Trip;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "guididx", "transport_type", "provider_id", "dep_date", "arr_date", "src_dep", "dst_arr",

@@ -7,8 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.core.ParameterizedTypeReference;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gillsoft.model.Ctx;
-import com.gillsoft.model.Var;
+import com.gillsoft.client.model.Ctx;
+import com.gillsoft.client.model.Var;
 import com.gillsoft.model.request.TripSearchRequest;
 
 public class TripPackage implements Serializable {

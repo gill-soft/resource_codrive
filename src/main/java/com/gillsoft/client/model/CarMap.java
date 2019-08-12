@@ -1,4 +1,4 @@
-package com.gillsoft.model;
+package com.gillsoft.client.model;
 
 import java.io.Serializable;
 import java.util.List;

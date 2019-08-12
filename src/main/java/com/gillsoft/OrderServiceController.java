@@ -15,8 +15,8 @@ import com.gillsoft.client.OrderIdModel;
 import com.gillsoft.client.ResResult;*/
 import com.gillsoft.client.RestClient;
 import com.gillsoft.client.ServiceIdModel;
+import com.gillsoft.client.model.Invoice;
 import com.gillsoft.model.Customer;
-import com.gillsoft.model.Invoice;
 import com.gillsoft.model.RestError;
 import com.gillsoft.model.ServiceItem;
 import com.gillsoft.model.request.OrderRequest;
@@ -65,9 +65,6 @@ public class OrderServiceController extends AbstractOrderService {
 		response.setCustomers(request.getCustomers());
 		
 		// копия для определения пассажиров
-		List<ServiceItem> items = new ArrayList<>();
-		items.addAll(request.getServices());
-		
 		List<ServiceItem> resultItems = new ArrayList<>();
 		
 		// список билетов
@@ -88,7 +85,8 @@ public class OrderServiceController extends AbstractOrderService {
 					throw new Exception("Customer not found - " + service.getCustomer().getId());
 				}
 			} catch (Exception e) {
-				service.setConfirmed(false);
+				service.setError(new RestError(e.getMessage()));
+				resultItems.add(service);
 			}
 		}
 		response.setOrderId(orderId.asString());

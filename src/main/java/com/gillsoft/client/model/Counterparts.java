@@ -1,4 +1,4 @@
-package com.gillsoft.model;
+package com.gillsoft.client.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.gillsoft.cache.IOCacheException;
 import com.gillsoft.cache.RedisMemoryCache;
-import com.gillsoft.model.Var;
+import com.gillsoft.client.model.Var;
 import com.gillsoft.util.ContextProvider;
 
 public class GetTripsTask implements Runnable, Serializable {

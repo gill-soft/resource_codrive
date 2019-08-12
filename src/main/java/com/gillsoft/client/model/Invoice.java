@@ -1,4 +1,4 @@
-package com.gillsoft.model;
+package com.gillsoft.client.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -7,6 +7,16 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gillsoft.LocalityServiceController;
+import com.gillsoft.model.CalcType;
+import com.gillsoft.model.Commission;
+import com.gillsoft.model.Currency;
+import com.gillsoft.model.Lang;
+import com.gillsoft.model.Organisation;
+import com.gillsoft.model.Price;
+import com.gillsoft.model.Seat;
+import com.gillsoft.model.Segment;
+import com.gillsoft.model.Tariff;
+import com.gillsoft.model.ValueType;
 import com.gillsoft.util.Date;
 import com.gillsoft.util.StringUtil;
 
