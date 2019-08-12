@@ -20,6 +20,7 @@ import com.gillsoft.cache.CacheHandler;
 import com.gillsoft.client.ResponseError;
 import com.gillsoft.client.RestClient;
 import com.gillsoft.client.TripPackage;
+import com.gillsoft.client.model.Point;
 import com.gillsoft.client.model.Var;
 import com.gillsoft.model.Currency;
 import com.gillsoft.model.Document;
@@ -193,8 +194,8 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 					segments.put(segmentId, segment);
 				}
 				
-				segment.setDeparture(addStation(localities, String.valueOf(trip.getTrip().getSrc().getIdx())));
-				segment.setArrival(addStation(localities, String.valueOf(trip.getTrip().getDst().getIdx())));
+				segment.setDeparture(addStation(localities, trip.getTrip().getSrc()));
+				segment.setArrival(addStation(localities, trip.getTrip().getDst()));
 				
 				addPrice(segment, new BigDecimal(trip.getSeats().getBusSoft().getPrice()).divide(new BigDecimal(100)));
 				
@@ -228,16 +229,20 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 		segment.setVehicle(new Vehicle(vehicleKey));
 	}
 	
-	public static Locality addStation(Map<String, Locality> localities, String id) {
-		Locality locality = LocalityServiceController.getLocality(id);
+	public static Locality addStation(Map<String, Locality> localities, Point point) {
+		String localityId = String.valueOf(point.getIdx());
+		Locality locality = LocalityServiceController.getLocality(localityId);
 		if (locality == null) {
-			return null;
-		}
-		String localityId = locality.getId();
-		try {
-			locality = locality.clone();
-			locality.setId(null);
-		} catch (CloneNotSupportedException e) {
+			locality = new Locality();
+			locality.setName(point.getName());
+			locality.setLatitude(point.getLatitude());
+			locality.setLongitude(point.getLongitude());
+		} else {
+			try {
+				locality = locality.clone();
+				locality.setId(null);
+			} catch (CloneNotSupportedException e) {
+			}
 		}
 		if (!localities.containsKey(localityId)) {
 			localities.put(localityId, locality);
