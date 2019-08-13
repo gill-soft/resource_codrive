@@ -159,7 +159,11 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 			
 			List<Trip> trips = new ArrayList<>();
 			
+			Locality from = addStation(localities, tripPackage.getCtx().getOtherSrc().get(tripPackage.getCtx().getUsedSrc()));
+			Locality to = addStation(localities, tripPackage.getCtx().getOtherDst().get(tripPackage.getCtx().getUsedDst()));
+            
 			for (Var trip : tripPackage.getVars()) {
+				
 				// если рейс заблокирован/уехал/продан - не добавляем
 				if (trip.getTrip().isNotForSale()
 						|| trip.getSeats().getBusSoft().getFree().compareTo(0) == 0) {
@@ -176,13 +180,13 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 					vehicle.setModel(trip.getTrip().getHardware());
 					vehicles.put(vehicleId, vehicle);
 				}
-				
 				String segmentId = tmpTrip.getId();
 				Segment segment = segments.get(segmentId);
 				if (segment == null) {
 					segment = new Segment();
 					segment.setId(trip.getGuididx());
-					segment.setNumber(trip.getTrip().getId());
+					segment.setNumber(trip.getTrip().getId()
+							+ (trip.getTrip().getName() != null ? (" " + trip.getTrip().getName()) : ""));
 					try {
 						segment.setDepartureDate(com.gillsoft.util.Date.getFullDateString(trip.getArrDate(), trip.getDstArr()));
 						segment.setArrivalDate(com.gillsoft.util.Date.getFullDateString(trip.getArrDate(), trip.getDstArr()));
@@ -193,12 +197,10 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 					segment.setFreeSeatsCount(trip.getSeats().getBusSoft().getFree());
 					segments.put(segmentId, segment);
 				}
-				
-				segment.setDeparture(addStation(localities, trip.getTrip().getSrc()));
-				segment.setArrival(addStation(localities, trip.getTrip().getDst()));
+				segment.setDeparture(from);
+				segment.setArrival(to);
 				
 				addPrice(segment, new BigDecimal(trip.getSeats().getBusSoft().getPrice()).divide(new BigDecimal(100)));
-				
 			}
 			container.setTrips(trips);
 		}
