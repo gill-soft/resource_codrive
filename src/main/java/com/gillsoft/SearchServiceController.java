@@ -188,7 +188,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 					segment.setNumber(trip.getTrip().getId()
 							+ (trip.getTrip().getName() != null ? (" " + trip.getTrip().getName()) : ""));
 					try {
-						segment.setDepartureDate(com.gillsoft.util.Date.getFullDateString(trip.getArrDate(), trip.getDstArr()));
+						segment.setDepartureDate(com.gillsoft.util.Date.getFullDateString(trip.getDepDate(), trip.getSrcDep()));
 						segment.setArrivalDate(com.gillsoft.util.Date.getFullDateString(trip.getArrDate(), trip.getDstArr()));
 					} catch (Exception e) {}
 					if (vehicles.containsKey(vehicleId)) {
