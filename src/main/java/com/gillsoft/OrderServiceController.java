@@ -8,12 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gillsoft.abstract_rest_service.AbstractOrderService;
 import com.gillsoft.client.OrderIdModel;
-/*import com.gillsoft.client.Accepted;
-import com.gillsoft.client.Confirmed;
-import com.gillsoft.client.Error;
-import com.gillsoft.client.OrderIdModel;
-import com.gillsoft.client.ResResult;*/
+import com.gillsoft.client.ResponseError;
 import com.gillsoft.client.RestClient;
+import com.gillsoft.client.RestClient.InvoiceStatus;
 import com.gillsoft.client.ServiceIdModel;
 import com.gillsoft.client.model.Invoice;
 import com.gillsoft.model.Customer;
@@ -148,13 +145,26 @@ public class OrderServiceController extends AbstractOrderService {
 		OrderResponse response = new OrderResponse();
 		response.setServices(new ArrayList<>(request.getServices().size()));
 		for (ServiceItem serviceItem : request.getServices()) {
+			
+			// проверяем статус инвойса
+			try {
+				Invoice invoice = client.getInvoice(serviceItem.getId());
+				int state = invoice.getState();
+				if (state == InvoiceStatus.CANCELED.getStatus()
+						|| state == InvoiceStatus.DELETED.getStatus()
+						|| state == InvoiceStatus.PAY_TIME_EXPIRED.getStatus() 
+						|| state == InvoiceStatus.OTHER.getStatus()) {
+					addServiceItem(response.getServices(), serviceItem.getId(), true, null);
+					continue;
+				}
+			} catch (Exception e) {
+			}
 			try {
 				client.cancel(serviceItem.getId());
-				serviceItem.setConfirmed(true);
+				addServiceItem(response.getServices(), serviceItem.getId(), true, null);
 			} catch (Exception e) {
-				serviceItem.setError(new RestError(e.getMessage()));
+				addServiceItem(response.getServices(), serviceItem.getId(), false, new RestError(e.getMessage()));
 			}
-			response.getServices().add(serviceItem);
 		}
 		return response;
 	}
@@ -168,12 +178,7 @@ public class OrderServiceController extends AbstractOrderService {
 	public OrderResponse prepareReturnServicesResponse(OrderRequest request) {
 		OrderResponse response = new OrderResponse();
 		response.setOrderId(request.getOrderId());
-		for (ServiceItem serviceItem : request.getServices()) {
-			if (response.getServices() == null) {
-				response.setServices(new ArrayList<>());
-			}
-			response.getServices().add(serviceItem);
-		}
+		response.setServices(request.getServices());
 		return response;
 	}
 

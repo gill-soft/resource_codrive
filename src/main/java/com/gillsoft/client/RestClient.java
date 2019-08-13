@@ -302,6 +302,20 @@ public class RestClient {
 			throw e;
 		}
 	}
+	
+	public Invoice getInvoice(String invoiceId) throws ResponseError {
+		Invoice invoice = null;
+		try {
+			invoice = getInvoice(getRequestEntity(
+					null,
+					HttpMethod.GET, String.format(INVOICE, invoiceId)));
+			checkInvoice(invoice);
+			return invoice;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	/*************************************************/
 	private <T> T getResult(RestTemplate template, Request request, String method, HttpMethod httpMethod,
