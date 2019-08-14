@@ -106,7 +106,7 @@ public class RestClient {
 	private static HttpHeaders headers = new HttpHeaders();
 	private static HttpHeaders postHeaders = new HttpHeaders();
 
-	private static final List<String> LANGS = Arrays.asList(new String[] { "ua", "ru", "en" });
+	private static final List<String> LANGS = Arrays.asList("ua", "ru", "en");
 
     @Autowired
     @Qualifier("RedisMemoryCache")
@@ -193,14 +193,10 @@ public class RestClient {
 		CarMap carMap = getResult(searchTemplate, null, String.format(CAR_MAP, tripId), HttpMethod.GET,
 				CarMap.getTypeReference());
 		if (carMap.getFreePlaces() != null && !carMap.getFreePlaces().isEmpty()) {
-			carMap.getFreePlaces().stream().forEach(c -> {
-				seats.add(createSeat(c, SeatStatus.FREE));
-			});
+			carMap.getFreePlaces().stream().forEach(c -> seats.add(createSeat(c, SeatStatus.FREE)));
 		}
 		if (carMap.getBusyPlaces() != null && !carMap.getBusyPlaces().isEmpty()) {
-			carMap.getBusyPlaces().stream().forEach(c -> {
-				seats.add(createSeat(c, SeatStatus.SALED));
-			});
+			carMap.getBusyPlaces().stream().forEach(c -> seats.add(createSeat(c, SeatStatus.SALED)));
 		}
 		return seats;
 	}
@@ -321,14 +317,14 @@ public class RestClient {
 	private <T> T getResult(RestTemplate template, Request request, String method, HttpMethod httpMethod,
 			ParameterizedTypeReference<T> type) throws ResponseError {
 		URI uri = UriComponentsBuilder.fromUriString(Config.getUrl() + method).build().toUri();
-		RequestEntity<Request> requestEntity = new RequestEntity<Request>(request,
+		RequestEntity<Request> requestEntity = new RequestEntity<>(request,
 				(httpMethod.equals(HttpMethod.POST) ? postHeaders : headers), httpMethod, uri);
 		ResponseEntity<T> response = template.exchange(requestEntity, type);
 		return response.getBody();
 	}
 	
 	private <T> RequestEntity<T> getRequestEntity(T request, HttpMethod httpMethod, String method) {
-		return new RequestEntity<T>(request, (httpMethod.equals(HttpMethod.POST) ? postHeaders : headers), httpMethod,
+		return new RequestEntity<>(request, (httpMethod.equals(HttpMethod.POST) ? postHeaders : headers), httpMethod,
 				UriComponentsBuilder.fromUriString(Config.getUrl() + method).build().toUri());
 	}
 
