@@ -24,6 +24,7 @@ import com.gillsoft.client.model.Point;
 import com.gillsoft.client.model.Var;
 import com.gillsoft.model.Currency;
 import com.gillsoft.model.Document;
+import com.gillsoft.model.Lang;
 import com.gillsoft.model.Locality;
 import com.gillsoft.model.Organisation;
 import com.gillsoft.model.Price;
@@ -143,7 +144,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 			Map<String, Locality> localities, Map<String, Organisation> organisations, Map<String, Segment> segments,
 			List<TripContainer> containers, TripPackage tripPackage) {
 		if (!tripPackage.isContinueSearch()) {
-			addResult(vehicles, localities, segments, containers, tripPackage);
+			addResult(vehicles, localities, organisations, segments, containers, tripPackage);
 		} else if (tripPackage.getRequest() != null) {
 			addInitSearchCallables(callables, tripPackage.getRequest().getLocalityPairs().get(0),
 					tripPackage.getRequest().getDates().get(0));
@@ -151,7 +152,8 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 	}
 	
 	private void addResult(Map<String, Vehicle> vehicles, Map<String, Locality> localities,
-			Map<String, Segment> segments, List<TripContainer> containers, TripPackage tripPackage) {
+			Map<String, Organisation> organisations, Map<String, Segment> segments, List<TripContainer> containers,
+			TripPackage tripPackage) {
 		TripContainer container = new TripContainer();
 		container.setRequest(tripPackage.getRequest());
 		if (tripPackage != null
@@ -190,15 +192,24 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 					try {
 						segment.setDepartureDate(com.gillsoft.util.Date.getFullDateString(trip.getDepDate(), trip.getSrcDep()));
 						segment.setArrivalDate(com.gillsoft.util.Date.getFullDateString(trip.getArrDate(), trip.getDstArr()));
-					} catch (Exception e) {}
-					if (vehicles.containsKey(vehicleId)) {
-						segment.setVehicle(new Vehicle(vehicleId));
+					} catch (Exception e) {
 					}
+					segment.setVehicle(new Vehicle(vehicleId));
 					segment.setFreeSeatsCount(trip.getSeats().getBusSoft().getFree());
 					segments.put(segmentId, segment);
 				}
 				segment.setDeparture(from);
 				segment.setArrival(to);
+				
+				String carrierId = trip.getTrip().getProviderId();
+				Organisation carrier = organisations.get(carrierId);
+				if (carrier == null) {
+					carrier = new Organisation();
+					carrier.setId(carrierId);
+					carrier.setName(Lang.UA, trip.getTrip().getTransporter());
+					organisations.put(carrierId, carrier);
+				}
+				segment.setCarrier(carrier);
 				
 				addPrice(segment, new BigDecimal(trip.getSeats().getBusSoft().getPrice()).divide(new BigDecimal(100)));
 			}

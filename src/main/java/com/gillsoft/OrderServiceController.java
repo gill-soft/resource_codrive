@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gillsoft.abstract_rest_service.AbstractOrderService;
 import com.gillsoft.client.OrderIdModel;
-import com.gillsoft.client.ResponseError;
 import com.gillsoft.client.RestClient;
 import com.gillsoft.client.RestClient.InvoiceStatus;
 import com.gillsoft.client.ServiceIdModel;

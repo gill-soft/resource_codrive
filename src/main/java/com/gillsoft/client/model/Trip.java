@@ -27,6 +27,8 @@ public class Trip implements Serializable {
 	private Point dst;
 	@JsonProperty("transporter")
 	private String transporter;
+	@JsonProperty("provider_id")
+	private String providerId;
 	@JsonProperty("state")
 	private String state;
 	@JsonProperty("hardware")
@@ -84,6 +86,14 @@ public class Trip implements Serializable {
 	@JsonProperty("transporter")
 	public void setTransporter(String transporter) {
 		this.transporter = transporter;
+	}
+
+	public String getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
 	}
 
 	@JsonProperty("state")
