@@ -175,7 +175,7 @@ public class Invoice {
 		segment.setDeparture(LocalityServiceController.getLocality(String.valueOf(travel.getTrip().getSrc().getIdx())));
 		segment.setArrival(LocalityServiceController.getLocality(String.valueOf(travel.getTrip().getDst().getIdx())));
 		Organisation carrier = new Organisation();
-		carrier.setId(travel.getTrip().getProviderId());
+		carrier.setId(travel.getTrip().getTransporter());
 		carrier.setName(Lang.UA, travel.getTrip().getTransporter());
 		segment.setCarrier(carrier);
 		Organisation insurance = new Organisation();

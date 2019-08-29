@@ -200,17 +200,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 				}
 				segment.setDeparture(from);
 				segment.setArrival(to);
-				
-				String carrierId = trip.getTrip().getProviderId();
-				Organisation carrier = organisations.get(carrierId);
-				if (carrier == null) {
-					carrier = new Organisation();
-					carrier.setId(carrierId);
-					carrier.setName(Lang.UA, trip.getTrip().getTransporter());
-					organisations.put(carrierId, carrier);
-				}
-				segment.setCarrier(carrier);
-				
+				addCarrier(organisations, segment, trip.getTrip().getTransporter());
 				addPrice(segment, new BigDecimal(trip.getSeats().getBusSoft().getPrice()).divide(new BigDecimal(100)));
 			}
 			container.setTrips(trips);
@@ -220,7 +210,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 		}
 		containers.add(container);
 	}
-	
+
 	private void addPrice(Segment segment, BigDecimal price) {
 		Price tripPrice = new Price();
 		Tariff tariff = new Tariff();
@@ -230,7 +220,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 		tripPrice.setTariff(tariff);
 		segment.setPrice(tripPrice);
 	}
-	
+
 	public static void addVehicle(Map<String, Vehicle> vehicles, Segment segment, String model) {
 		String vehicleKey = StringUtil.md5(model);
 		Vehicle vehicle = vehicles.get(vehicleKey);
@@ -241,7 +231,18 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 		}
 		segment.setVehicle(new Vehicle(vehicleKey));
 	}
-	
+
+	public static void addCarrier(Map<String, Organisation> organisations, Segment segment, String transporter) {
+		String id = StringUtil.md5(transporter);
+		Organisation organisation = organisations.get(id);
+		if (organisation == null) {
+			organisation = new Organisation(id);
+			organisation.setName(Lang.UA, transporter);
+			organisations.put(id, organisation);
+		}
+		segment.setCarrier(new Organisation(id));
+	}
+
 	public static Locality addStation(Map<String, Locality> localities, Point point) {
 		String localityId = String.valueOf(point.getIdx());
 		Locality locality = LocalityServiceController.getLocality(localityId);
