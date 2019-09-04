@@ -1,6 +1,7 @@
 package com.gillsoft;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,13 @@ import com.gillsoft.client.RestClient.InvoiceStatus;
 import com.gillsoft.client.ServiceIdModel;
 import com.gillsoft.client.model.Invoice;
 import com.gillsoft.model.Customer;
+import com.gillsoft.model.Document;
+import com.gillsoft.model.DocumentType;
 import com.gillsoft.model.RestError;
 import com.gillsoft.model.ServiceItem;
 import com.gillsoft.model.request.OrderRequest;
 import com.gillsoft.model.response.OrderResponse;
+import com.gillsoft.util.StringUtil;
 
 @RestController
 public class OrderServiceController extends AbstractOrderService {
@@ -92,7 +96,16 @@ public class OrderServiceController extends AbstractOrderService {
 
 	@Override
 	public OrderResponse getPdfDocumentsResponse(OrderRequest request) {
-		throw RestClient.createUnavailableMethod();
+		OrderResponse response = new OrderResponse();
+		OrderIdModel orderIdModel = new OrderIdModel().create(request.getOrderId());
+		if (orderIdModel != null && orderIdModel.getServices() != null && !orderIdModel.getServices().isEmpty()) {
+			Document document = new Document();
+			document.setType(DocumentType.TICKET);
+			document.setBase64(
+					StringUtil.toBase64(client.getTickets(orderIdModel.getServices().get(0).getInvoiceId())));
+			response.setDocuments(Arrays.asList(document));
+		}
+		return response;
 	}
 
 	@Override

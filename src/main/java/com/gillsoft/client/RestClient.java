@@ -93,15 +93,16 @@ public class RestClient {
 
 	private static final String NAME_REGEX = "[^a-zA-Z0-9\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0454\u0404-]";
 
-	private static final String STOPPOINTS = "api/rd/stoppoint/ua/bus";
-	private static final String DEPARTURE_STATIONS = "api/departure_stations/ext/%s/bus";
-	private static final String ARRIVE_STATIONS = "api/arrive_stations/ext/%s/bus";
-	private static final String VARIANTS = "api/variants/ua/bus/%s/%s/%s";
-	private static final String CAR_MAP = "api/car_map/ua/%s/0";
-	private static final String BILL = "api/bill/ua/%s/%s";
-	private static final String INVOICE = "api/invoice/ua/%s";
-	private static final String PAY = "/api/pay/%s/%s";
-	private static final String CANCEL = "/api/cancel/%s";
+	private static final String STOPPOINTS = "rd/stoppoint/ua/bus";
+	private static final String DEPARTURE_STATIONS = "departure_stations/ext/%s/bus";
+	private static final String ARRIVE_STATIONS = "arrive_stations/ext/%s/bus";
+	private static final String VARIANTS = "variants/ua/bus/%s/%s/%s";
+	private static final String CAR_MAP = "car_map/ua/%s/0";
+	private static final String BILL = "bill/ua/%s/%s";
+	private static final String INVOICE = "invoice/ua/%s";
+	private static final String PAY = "pay/%s/%s";
+	private static final String CANCEL = "cancel/%s";
+	private static final String BOARDING_PASS = "boarding_pass/%s";
 
 	private static HttpHeaders headers = new HttpHeaders();
 	private static HttpHeaders postHeaders = new HttpHeaders();
@@ -253,10 +254,11 @@ public class RestClient {
 	
 	public Invoice bill(ServiceItem service, Customer customer) throws ResponseError {
 		try {
+			String sellerPriceTotal = service.getPrice() != null && service.getPrice().getAmount() != null ? service.getPrice().getAmount().multiply(new BigDecimal(100)).toString() : null;
 			Invoice invoice = getInvoice(getRequestEntity(
 					new BillRequest(
 							new BillSeat(customer.getName().replaceAll(NAME_REGEX, ""), customer.getSurname().replaceAll(NAME_REGEX, "")),
-							new BillOptions(customer.getEmail(), customer.getPhone())),
+							new BillOptions(customer.getEmail(), customer.getPhone(), sellerPriceTotal)),
 					HttpMethod.POST, String.format(BILL, service.getSegment().getId(), service.getSeat().getId())));
 			checkInvoice(invoice);
             service.setId(invoice.getId());
@@ -311,6 +313,12 @@ public class RestClient {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public byte[] getTickets(String invoiceId) {
+		return template
+				.exchange(getRequestEntity(null, HttpMethod.GET, String.format(BOARDING_PASS, invoiceId)), byte[].class)
+				.getBody();
 	}
 
 	/*************************************************/

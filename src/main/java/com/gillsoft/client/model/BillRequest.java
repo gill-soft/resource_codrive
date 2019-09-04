@@ -18,7 +18,7 @@ public class BillRequest {
 	public BillRequest() {}
 	
 	public BillRequest(BillSeat seat, BillOptions options) {
-		this.seats = Arrays.asList(new BillSeat[] { seat });
+		this.seats = Arrays.asList(seat);
 		this.options = options;
 	}
 	
